@@ -227,50 +227,50 @@ with <span class="math inline">\(x=1\)</span> for samples before and
 <span class="math inline">\(\gamma\)</span> is intercept, <span class="math inline">\(\beta\)</span> is the effect of the treatment, and
 <span class="math inline">\(\xi\in\mathbb{R}^{+}\)</span> is precision
 (inverse of overdispersion).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; K; <span class="co">// categories (genes)</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// samples</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="dt">vector</span>[K] gamma; <span class="co">// intercept</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; gamma_sigma; </span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="dt">vector</span>[K] delta; <span class="co">// effect</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; delta_sigma;</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="dt">real</span> xi; <span class="co">// precision</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="dt">int</span> n; <span class="co">// total counts (tries)</span></span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>}</span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  <span class="dt">int</span> y_a [N,K]; <span class="co">// sample after</span></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="dt">int</span> y_b [N,K]; <span class="co">// sample before</span></span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="dt">vector</span> [K] mu [<span class="dv">2</span>]; <span class="co">// intermediate alphas from dirichlet dist.</span></span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  <span class="dt">vector</span> [K] alpha [N]; </span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  <span class="dt">vector</span> [K] beta [N];</span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  </span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>   <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span>:K) {</span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>     alpha[i][j] = normal_rng(gamma[j], gamma_sigma);</span>
-<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>     beta[i][j] = normal_rng(delta[j], delta_sigma);</span>
-<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>   } </span>
-<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>   mu[<span class="dv">1</span>] = dirichlet_rng(xi*softmax(alpha[i] + beta[i])); <span class="co">// before treatment sim. from DM.</span></span>
-<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>   mu[<span class="dv">2</span>] = dirichlet_rng(xi*softmax(alpha[i] - beta[i])); <span class="co">// after treatment sim. from DM.</span></span>
-<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>   y_a[i,] = multinomial_rng(mu[<span class="dv">1</span>], n); <span class="co">// simulate from multinomial dist. -&gt; after sample</span></span>
-<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>   y_b[i,] = multinomial_rng(mu[<span class="dv">2</span>], n); <span class="co">// simulate from multinomial dist. -&gt; before sample </span></span>
-<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>  }</span>
-<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; K; <span class="co">// categories (genes)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// samples</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[K] gamma; <span class="co">// intercept</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; gamma_sigma; </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[K] delta; <span class="co">// effect</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; delta_sigma;</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> xi; <span class="co">// precision</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> n; <span class="co">// total counts (tries)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y_a [N,K]; <span class="co">// sample after</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y_b [N,K]; <span class="co">// sample before</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [K] mu [<span class="dv">2</span>]; <span class="co">// intermediate alphas from dirichlet dist.</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [K] alpha [N]; </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [K] beta [N];</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span>:K) {</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>     alpha[i][j] = normal_rng(gamma[j], gamma_sigma);</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>     beta[i][j] = normal_rng(delta[j], delta_sigma);</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>   } </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>   mu[<span class="dv">1</span>] = dirichlet_rng(xi*softmax(alpha[i] + beta[i])); <span class="co">// before treatment sim. from DM.</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>   mu[<span class="dv">2</span>] = dirichlet_rng(xi*softmax(alpha[i] - beta[i])); <span class="co">// after treatment sim. from DM.</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>   y_a[i,] = multinomial_rng(mu[<span class="dv">1</span>], n); <span class="co">// simulate from multinomial dist. -&gt; after sample</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>   y_b[i,] = multinomial_rng(mu[<span class="dv">2</span>], n); <span class="co">// simulate from multinomial dist. -&gt; before sample </span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>To simulate data we only need to provide the inputs (see ‘data’ block
 in the above STAN code):</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">123456</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>N_train <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>N_test <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>N <span class="ot">&lt;-</span> N_train <span class="sc">+</span> N_test</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> K, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> K<span class="dv">-5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.05</span>), </span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>           <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.35</span>))</span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>xi <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>gamma_sigma <span class="ot">=</span> <span class="fl">0.1</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>delta_sigma <span class="ot">=</span> <span class="fl">0.2</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">123456</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>N_train <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>N_test <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> N_train <span class="sc">+</span> N_test</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> K, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> K<span class="dv">-5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.05</span>), </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>           <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.35</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>xi <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>gamma_sigma <span class="ot">=</span> <span class="fl">0.1</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>delta_sigma <span class="ot">=</span> <span class="fl">0.2</span></span></code></pre></div>
 <p>… and simulate 20 samples with:</p>
 <p>We then extract the simulated observations: two matrices <span class="math inline">\(\vec{y}^{a}\)</span> and <span class="math inline">\(\vec{y}^{b}\)</span>, with rows as samples and
 columns as genes. We treat the first 10 samples (rows in each matrix) as
@@ -327,241 +327,241 @@ differences:</p>
 </div>
 <div id="stan-code-for-model-dm" class="section level3">
 <h3>STAN code for model <span class="math inline">\(DM\)</span></h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode stan fold-hide"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="kw">functions</span> {</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="dt">real</span> dirichlet_multinomial_complete_lpmf(<span class="dt">int</span>[] y, <span class="dt">vector</span> alpha) {</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="dt">real</span> sum_alpha = sum(alpha);</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="cf">return</span> lgamma(sum_alpha) - lgamma(sum(y) + sum_alpha)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>           + lgamma(sum(y)+<span class="dv">1</span>) - sum(lgamma(to_vector(y)+<span class="dv">1</span>))</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>           + sum(lgamma(to_vector(y) + alpha)) - sum(lgamma(alpha));</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  }</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>}</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample; <span class="co">// number of samples (repertoires)</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_gene; <span class="co">// number of genes</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="dt">int</span> Y_1 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="dt">int</span> Y_2 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  <span class="dt">int</span> N [N_sample, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>  <span class="co">// test data</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample_test; <span class="co">// number of samples (repertoires)</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="dt">int</span> Y_1_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>  <span class="dt">int</span> Y_2_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>  <span class="dt">int</span> N_test [N_sample_test, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>}</span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>  <span class="dt">real</span> N_real [N_sample, <span class="dv">2</span>];</span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>  N_real = N;</span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>}</span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="kw">parameters</span> {</span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_mu_gene;</span>
-<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_gene;</span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; alpha_sigma_gene;</span>
-<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_pop;</span>
-<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z [N_sample];</span>
-<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_z [N_sample];</span>
-<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z_gene;</span>
-<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; xi;</span>
-<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>}</span>
-<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
-<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha [N_sample];</span>
-<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta [N_sample];</span>
-<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_mu_gene;</span>
-<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a>  </span>
-<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a>  beta_mu_gene = <span class="dv">0</span>+beta_sigma_pop*beta_z_gene;</span>
-<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a>    beta[i] = beta_mu_gene + beta_sigma_gene * beta_z[i];</span>
-<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a>    alpha[i] = alpha_mu_gene + alpha_sigma_gene * alpha_z[i];</span>
-<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a>  }</span>
-<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a>}</span>
-<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a></span>
-<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a>  <span class="kw">target +=</span> exponential_lpdf(xi | <span class="fl">0.05</span>);</span>
-<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_pop | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(alpha_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(alpha_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(beta_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a>  }</span>
-<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(beta_z_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(alpha_mu_gene | <span class="dv">0</span>, <span class="dv">5</span>);</span>
-<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a>  </span>
-<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a>  <span class="co">// likelihood</span></span>
-<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a>    <span class="kw">target +=</span> dirichlet_multinomial_complete_lpmf(Y_1[,i]|xi * softmax(alpha[i]-beta[i]));</span>
-<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a>    <span class="kw">target +=</span> dirichlet_multinomial_complete_lpmf(Y_2[,i]|xi * softmax(alpha[i]+beta[i]));</span>
-<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a>  }</span>
-<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a>}</span>
-<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a></span>
-<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_1 [N_gene, N_sample];</span>
-<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_2 [N_gene, N_sample];</span>
-<span id="cb3-73"><a href="#cb3-73" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_1 [N_gene, N_sample];</span>
-<span id="cb3-74"><a href="#cb3-74" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_2 [N_gene, N_sample];</span>
-<span id="cb3-75"><a href="#cb3-75" tabindex="-1"></a>  <span class="dt">real</span> log_lik [N_sample, <span class="dv">2</span>];</span>
-<span id="cb3-76"><a href="#cb3-76" tabindex="-1"></a>  <span class="dt">real</span> log_lik_train [N_sample, <span class="dv">2</span>];</span>
-<span id="cb3-77"><a href="#cb3-77" tabindex="-1"></a>  <span class="dt">real</span> log_lik_test [N_sample_test, <span class="dv">2</span>];</span>
-<span id="cb3-78"><a href="#cb3-78" tabindex="-1"></a>  </span>
-<span id="cb3-79"><a href="#cb3-79" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] p [<span class="dv">2</span>];</span>
-<span id="cb3-80"><a href="#cb3-80" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] mu [<span class="dv">2</span>];</span>
-<span id="cb3-81"><a href="#cb3-81" tabindex="-1"></a>  <span class="dt">real</span> a [N_gene];</span>
-<span id="cb3-82"><a href="#cb3-82" tabindex="-1"></a>  <span class="dt">real</span> b [N_gene];</span>
-<span id="cb3-83"><a href="#cb3-83" tabindex="-1"></a></span>
-<span id="cb3-84"><a href="#cb3-84" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb3-85"><a href="#cb3-85" tabindex="-1"></a>    p[<span class="dv">1</span>] = dirichlet_rng(xi * softmax(alpha[i]-beta[i]));</span>
-<span id="cb3-86"><a href="#cb3-86" tabindex="-1"></a>    Y_hat_1[,i] = multinomial_rng(p[<span class="dv">1</span>], N[i,<span class="dv">1</span>]);</span>
-<span id="cb3-87"><a href="#cb3-87" tabindex="-1"></a>    p[<span class="dv">2</span>] = dirichlet_rng(xi * softmax(alpha[i]+beta[i]));</span>
-<span id="cb3-88"><a href="#cb3-88" tabindex="-1"></a>    Y_hat_2[,i] = multinomial_rng(p[<span class="dv">2</span>], N[i,<span class="dv">2</span>]);</span>
-<span id="cb3-89"><a href="#cb3-89" tabindex="-1"></a>    </span>
-<span id="cb3-90"><a href="#cb3-90" tabindex="-1"></a>    log_lik[i,<span class="dv">1</span>] = dirichlet_multinomial_complete_lpmf(Y_1[,i]|xi*softmax(alpha[i]-beta[i]));</span>
-<span id="cb3-91"><a href="#cb3-91" tabindex="-1"></a>    log_lik[i,<span class="dv">2</span>] = dirichlet_multinomial_complete_lpmf(Y_2[,i]|xi*softmax(alpha[i]+beta[i]));</span>
-<span id="cb3-92"><a href="#cb3-92" tabindex="-1"></a>  }</span>
-<span id="cb3-93"><a href="#cb3-93" tabindex="-1"></a>  </span>
-<span id="cb3-94"><a href="#cb3-94" tabindex="-1"></a>  <span class="co">// PPC: condition-specific</span></span>
-<span id="cb3-95"><a href="#cb3-95" tabindex="-1"></a>  a = normal_rng(alpha_mu_gene, alpha_sigma_gene);</span>
-<span id="cb3-96"><a href="#cb3-96" tabindex="-1"></a>  b = normal_rng(beta_mu_gene, beta_sigma_gene);</span>
-<span id="cb3-97"><a href="#cb3-97" tabindex="-1"></a>  mu[<span class="dv">1</span>] = xi * softmax(to_vector(a)-to_vector(b));</span>
-<span id="cb3-98"><a href="#cb3-98" tabindex="-1"></a>  mu[<span class="dv">2</span>] = xi * softmax(to_vector(a)+to_vector(b));</span>
-<span id="cb3-99"><a href="#cb3-99" tabindex="-1"></a>  <span class="co">// PPC: test</span></span>
-<span id="cb3-100"><a href="#cb3-100" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample_test) {</span>
-<span id="cb3-101"><a href="#cb3-101" tabindex="-1"></a>    log_lik_test[i,<span class="dv">1</span>] = dirichlet_multinomial_complete_lpmf(Y_1_test[,i]|mu[<span class="dv">1</span>]);</span>
-<span id="cb3-102"><a href="#cb3-102" tabindex="-1"></a>    log_lik_test[i,<span class="dv">2</span>] = dirichlet_multinomial_complete_lpmf(Y_2_test[,i]|mu[<span class="dv">2</span>]);</span>
-<span id="cb3-103"><a href="#cb3-103" tabindex="-1"></a>  }</span>
-<span id="cb3-104"><a href="#cb3-104" tabindex="-1"></a>  <span class="co">// PPC: train</span></span>
-<span id="cb3-105"><a href="#cb3-105" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb3-106"><a href="#cb3-106" tabindex="-1"></a>    log_lik_train[i,<span class="dv">1</span>] = dirichlet_multinomial_complete_lpmf(Y_1[,i]|mu[<span class="dv">1</span>]);</span>
-<span id="cb3-107"><a href="#cb3-107" tabindex="-1"></a>    log_lik_train[i,<span class="dv">2</span>] = dirichlet_multinomial_complete_lpmf(Y_2[,i]|mu[<span class="dv">2</span>]);</span>
-<span id="cb3-108"><a href="#cb3-108" tabindex="-1"></a>    Y_hat_group_1[,i] = multinomial_rng(dirichlet_rng(mu[<span class="dv">1</span>]), N[i,<span class="dv">1</span>]);</span>
-<span id="cb3-109"><a href="#cb3-109" tabindex="-1"></a>    Y_hat_group_2[,i] = multinomial_rng(dirichlet_rng(mu[<span class="dv">2</span>]), N[i,<span class="dv">2</span>]);</span>
-<span id="cb3-110"><a href="#cb3-110" tabindex="-1"></a>  }</span>
-<span id="cb3-111"><a href="#cb3-111" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode stan fold-hide"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">functions</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> dirichlet_multinomial_complete_lpmf(<span class="dt">int</span>[] y, <span class="dt">vector</span> alpha) {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> sum_alpha = sum(alpha);</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lgamma(sum_alpha) - lgamma(sum(y) + sum_alpha)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>           + lgamma(sum(y)+<span class="dv">1</span>) - sum(lgamma(to_vector(y)+<span class="dv">1</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>           + sum(lgamma(to_vector(y) + alpha)) - sum(lgamma(alpha));</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample; <span class="co">// number of samples (repertoires)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_gene; <span class="co">// number of genes</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_1 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_2 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> N [N_sample, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">// test data</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample_test; <span class="co">// number of samples (repertoires)</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_1_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_2_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> N_test [N_sample_test, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> N_real [N_sample, <span class="dv">2</span>];</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  N_real = N;</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_mu_gene;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_gene;</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; alpha_sigma_gene;</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_pop;</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z [N_sample];</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_z [N_sample];</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z_gene;</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; xi;</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha [N_sample];</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta [N_sample];</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_mu_gene;</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  beta_mu_gene = <span class="dv">0</span>+beta_sigma_pop*beta_z_gene;</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    beta[i] = beta_mu_gene + beta_sigma_gene * beta_z[i];</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    alpha[i] = alpha_mu_gene + alpha_sigma_gene * alpha_z[i];</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> exponential_lpdf(xi | <span class="fl">0.05</span>);</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_pop | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(alpha_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(alpha_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(beta_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(beta_z_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(alpha_mu_gene | <span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="co">// likelihood</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> dirichlet_multinomial_complete_lpmf(Y_1[,i]|xi * softmax(alpha[i]-beta[i]));</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> dirichlet_multinomial_complete_lpmf(Y_2[,i]|xi * softmax(alpha[i]+beta[i]));</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_1 [N_gene, N_sample];</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_2 [N_gene, N_sample];</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_1 [N_gene, N_sample];</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_2 [N_gene, N_sample];</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> log_lik [N_sample, <span class="dv">2</span>];</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> log_lik_train [N_sample, <span class="dv">2</span>];</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> log_lik_test [N_sample_test, <span class="dv">2</span>];</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] p [<span class="dv">2</span>];</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] mu [<span class="dv">2</span>];</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> a [N_gene];</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> b [N_gene];</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>    p[<span class="dv">1</span>] = dirichlet_rng(xi * softmax(alpha[i]-beta[i]));</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>    Y_hat_1[,i] = multinomial_rng(p[<span class="dv">1</span>], N[i,<span class="dv">1</span>]);</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>    p[<span class="dv">2</span>] = dirichlet_rng(xi * softmax(alpha[i]+beta[i]));</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    Y_hat_2[,i] = multinomial_rng(p[<span class="dv">2</span>], N[i,<span class="dv">2</span>]);</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>    log_lik[i,<span class="dv">1</span>] = dirichlet_multinomial_complete_lpmf(Y_1[,i]|xi*softmax(alpha[i]-beta[i]));</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>    log_lik[i,<span class="dv">2</span>] = dirichlet_multinomial_complete_lpmf(Y_2[,i]|xi*softmax(alpha[i]+beta[i]));</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>  <span class="co">// PPC: condition-specific</span></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>  a = normal_rng(alpha_mu_gene, alpha_sigma_gene);</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>  b = normal_rng(beta_mu_gene, beta_sigma_gene);</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>  mu[<span class="dv">1</span>] = xi * softmax(to_vector(a)-to_vector(b));</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>  mu[<span class="dv">2</span>] = xi * softmax(to_vector(a)+to_vector(b));</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>  <span class="co">// PPC: test</span></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample_test) {</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    log_lik_test[i,<span class="dv">1</span>] = dirichlet_multinomial_complete_lpmf(Y_1_test[,i]|mu[<span class="dv">1</span>]);</span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>    log_lik_test[i,<span class="dv">2</span>] = dirichlet_multinomial_complete_lpmf(Y_2_test[,i]|mu[<span class="dv">2</span>]);</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>  <span class="co">// PPC: train</span></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>    log_lik_train[i,<span class="dv">1</span>] = dirichlet_multinomial_complete_lpmf(Y_1[,i]|mu[<span class="dv">1</span>]);</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>    log_lik_train[i,<span class="dv">2</span>] = dirichlet_multinomial_complete_lpmf(Y_2[,i]|mu[<span class="dv">2</span>]);</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>    Y_hat_group_1[,i] = multinomial_rng(dirichlet_rng(mu[<span class="dv">1</span>]), N[i,<span class="dv">1</span>]);</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>    Y_hat_group_2[,i] = multinomial_rng(dirichlet_rng(mu[<span class="dv">2</span>]), N[i,<span class="dv">2</span>]);</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="stan-code-for-model-m" class="section level3">
 <h3>STAN code for model <span class="math inline">\(M\)</span></h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode stan fold-hide"><code class="sourceCode stan"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample; <span class="co">// number of samples (repertoires)</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_gene; <span class="co">// number of genes</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="dt">int</span> Y_1 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="dt">int</span> Y_2 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="dt">int</span> N [N_sample, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="co">// test data</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample_test; <span class="co">// number of samples (repertoires)</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="dt">int</span> Y_1_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="dt">int</span> Y_2_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="dt">int</span> N_test [N_sample_test, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>}</span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  <span class="dt">real</span> N_real [N_sample, <span class="dv">2</span>];</span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  N_real = N;</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>}</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="kw">parameters</span> {</span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_mu_gene;</span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_gene;</span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; alpha_sigma_gene;</span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_pop;</span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z [N_sample];</span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_z [N_sample];</span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z_gene;</span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>}</span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha [N_sample];</span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta [N_sample];</span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_mu_gene;</span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>  </span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>  beta_mu_gene = <span class="dv">0</span>+beta_sigma_pop*beta_z_gene;</span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>    beta[i]=beta_mu_gene+beta_sigma_gene*beta_z[i];</span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>    alpha[i]=alpha_mu_gene+alpha_sigma_gene*alpha_z[i];</span>
-<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>  }</span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a>}</span>
-<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_pop | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(alpha_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(alpha_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(beta_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>  }</span>
-<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(beta_z_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
-<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(alpha_mu_gene | <span class="dv">0</span>, <span class="dv">5</span>);</span>
-<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>  </span>
-<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>  <span class="co">// likelihood</span></span>
-<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>    <span class="kw">target +=</span> multinomial_lpmf(Y_1[,i] | softmax(alpha[i]-beta[i]));</span>
-<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>    <span class="kw">target +=</span> multinomial_lpmf(Y_2[,i] | softmax(alpha[i]+beta[i]));</span>
-<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>  }</span>
-<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>}</span>
-<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a></span>
-<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_1 [N_gene, N_sample];</span>
-<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_2 [N_gene, N_sample];</span>
-<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_1 [N_gene, N_sample];</span>
-<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_2 [N_gene, N_sample];</span>
-<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a>  <span class="dt">real</span> log_lik [N_sample, <span class="dv">2</span>];</span>
-<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a>  <span class="dt">real</span> log_lik_test [N_sample_test, <span class="dv">2</span>];</span>
-<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a>  <span class="dt">real</span> log_lik_train [N_sample, <span class="dv">2</span>];</span>
-<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a>  </span>
-<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] p [<span class="dv">2</span>];</span>
-<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] mu [<span class="dv">2</span>];</span>
-<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a>  <span class="dt">real</span> a [N_gene];</span>
-<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a>  <span class="dt">real</span> b [N_gene];</span>
-<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a>  </span>
-<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a>  <span class="co">// PPC</span></span>
-<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a>    p[<span class="dv">1</span>] = softmax(alpha[i] - beta[i]);</span>
-<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a>    p[<span class="dv">2</span>] = softmax(alpha[i] + beta[i]);</span>
-<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a>    </span>
-<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a>    Y_hat_1[,i] = multinomial_rng(p[<span class="dv">1</span>], sum(Y_1[,i]));</span>
-<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a>    Y_hat_2[,i] = multinomial_rng(p[<span class="dv">2</span>], sum(Y_2[,i]));</span>
-<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a>    log_lik[i,<span class="dv">1</span>] = multinomial_lpmf(Y_1[,i] | p[<span class="dv">1</span>]);</span>
-<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a>    log_lik[i,<span class="dv">2</span>] = multinomial_lpmf(Y_2[,i] | p[<span class="dv">2</span>]);</span>
-<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a>  }</span>
-<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a>  </span>
-<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a>  <span class="co">// PPC - test (condition-specific)</span></span>
-<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a>  a = normal_rng(alpha_mu_gene, alpha_sigma_gene);</span>
-<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a>  b = normal_rng(beta_mu_gene, beta_sigma_gene);</span>
-<span id="cb4-87"><a href="#cb4-87" tabindex="-1"></a>  mu[<span class="dv">1</span>]=softmax(to_vector(a)-to_vector(b));</span>
-<span id="cb4-88"><a href="#cb4-88" tabindex="-1"></a>  mu[<span class="dv">2</span>]=softmax(to_vector(a)+to_vector(b));</span>
-<span id="cb4-89"><a href="#cb4-89" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample_test) {</span>
-<span id="cb4-90"><a href="#cb4-90" tabindex="-1"></a>    log_lik_test[i,<span class="dv">1</span>] = multinomial_lpmf(Y_1_test[,i]|mu[<span class="dv">1</span>]);</span>
-<span id="cb4-91"><a href="#cb4-91" tabindex="-1"></a>    log_lik_test[i,<span class="dv">2</span>] = multinomial_lpmf(Y_2_test[,i]|mu[<span class="dv">2</span>]);</span>
-<span id="cb4-92"><a href="#cb4-92" tabindex="-1"></a>  }</span>
-<span id="cb4-93"><a href="#cb4-93" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
-<span id="cb4-94"><a href="#cb4-94" tabindex="-1"></a>    log_lik_train[i,<span class="dv">1</span>] = multinomial_lpmf(Y_1[,i]|mu[<span class="dv">1</span>]);</span>
-<span id="cb4-95"><a href="#cb4-95" tabindex="-1"></a>    log_lik_train[i,<span class="dv">2</span>] = multinomial_lpmf(Y_2[,i]|mu[<span class="dv">2</span>]);</span>
-<span id="cb4-96"><a href="#cb4-96" tabindex="-1"></a>    Y_hat_group_1[,i] = multinomial_rng(mu[<span class="dv">1</span>], N[i,<span class="dv">1</span>]);</span>
-<span id="cb4-97"><a href="#cb4-97" tabindex="-1"></a>    Y_hat_group_2[,i] = multinomial_rng(mu[<span class="dv">2</span>], N[i,<span class="dv">2</span>]);</span>
-<span id="cb4-98"><a href="#cb4-98" tabindex="-1"></a>  }</span>
-<span id="cb4-99"><a href="#cb4-99" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode stan fold-hide"><code class="sourceCode stan"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample; <span class="co">// number of samples (repertoires)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_gene; <span class="co">// number of genes</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_1 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_2 [N_gene, N_sample]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> N [N_sample, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// test data</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; N_sample_test; <span class="co">// number of samples (repertoires)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_1_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_2_test [N_gene, N_sample_test]; <span class="co">// number of successes (cells) in samples x gene</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> N_test [N_sample_test, <span class="dv">2</span>]; <span class="co">// number of total tries (repertoire size)</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> N_real [N_sample, <span class="dv">2</span>];</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  N_real = N;</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_mu_gene;</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_gene;</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; alpha_sigma_gene;</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; beta_sigma_pop;</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z [N_sample];</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha_z [N_sample];</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_z_gene;</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] alpha [N_sample];</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta [N_sample];</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] beta_mu_gene;</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  beta_mu_gene = <span class="dv">0</span>+beta_sigma_pop*beta_z_gene;</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    beta[i]=beta_mu_gene+beta_sigma_gene*beta_z[i];</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    alpha[i]=alpha_mu_gene+alpha_sigma_gene*alpha_z[i];</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_pop | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(alpha_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> cauchy_lpdf(beta_sigma_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(alpha_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> normal_lpdf(beta_z[i] | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(beta_z_gene | <span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> normal_lpdf(alpha_mu_gene | <span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">// likelihood</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> multinomial_lpmf(Y_1[,i] | softmax(alpha[i]-beta[i]));</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">target +=</span> multinomial_lpmf(Y_2[,i] | softmax(alpha[i]+beta[i]));</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_1 [N_gene, N_sample];</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_2 [N_gene, N_sample];</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_1 [N_gene, N_sample];</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> Y_hat_group_2 [N_gene, N_sample];</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> log_lik [N_sample, <span class="dv">2</span>];</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> log_lik_test [N_sample_test, <span class="dv">2</span>];</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> log_lik_train [N_sample, <span class="dv">2</span>];</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] p [<span class="dv">2</span>];</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [N_gene] mu [<span class="dv">2</span>];</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> a [N_gene];</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> b [N_gene];</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  <span class="co">// PPC</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    p[<span class="dv">1</span>] = softmax(alpha[i] - beta[i]);</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    p[<span class="dv">2</span>] = softmax(alpha[i] + beta[i]);</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>    Y_hat_1[,i] = multinomial_rng(p[<span class="dv">1</span>], sum(Y_1[,i]));</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    Y_hat_2[,i] = multinomial_rng(p[<span class="dv">2</span>], sum(Y_2[,i]));</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    log_lik[i,<span class="dv">1</span>] = multinomial_lpmf(Y_1[,i] | p[<span class="dv">1</span>]);</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    log_lik[i,<span class="dv">2</span>] = multinomial_lpmf(Y_2[,i] | p[<span class="dv">2</span>]);</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>  <span class="co">// PPC - test (condition-specific)</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  a = normal_rng(alpha_mu_gene, alpha_sigma_gene);</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>  b = normal_rng(beta_mu_gene, beta_sigma_gene);</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>  mu[<span class="dv">1</span>]=softmax(to_vector(a)-to_vector(b));</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>  mu[<span class="dv">2</span>]=softmax(to_vector(a)+to_vector(b));</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample_test) {</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    log_lik_test[i,<span class="dv">1</span>] = multinomial_lpmf(Y_1_test[,i]|mu[<span class="dv">1</span>]);</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    log_lik_test[i,<span class="dv">2</span>] = multinomial_lpmf(Y_2_test[,i]|mu[<span class="dv">2</span>]);</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N_sample) {</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    log_lik_train[i,<span class="dv">1</span>] = multinomial_lpmf(Y_1[,i]|mu[<span class="dv">1</span>]);</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    log_lik_train[i,<span class="dv">2</span>] = multinomial_lpmf(Y_2[,i]|mu[<span class="dv">2</span>]);</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    Y_hat_group_1[,i] = multinomial_rng(mu[<span class="dv">1</span>], N[i,<span class="dv">1</span>]);</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    Y_hat_group_2[,i] = multinomial_rng(mu[<span class="dv">2</span>], N[i,<span class="dv">2</span>]);</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="model-fitting" class="section level3">
 <h3>Model fitting</h3>
 <p>We will fit models <span class="math inline">\(DM\)</span> and <span class="math inline">\(M\)</span> using <span class="math inline">\(D_{\text{train}}\)</span>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>fit_dm <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_dm,</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                          <span class="at">data =</span> u,</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                          <span class="at">chains =</span> <span class="dv">3</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                          <span class="at">cores =</span> <span class="dv">3</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>                          <span class="at">iter =</span> <span class="dv">3500</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>                          <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>, </span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>                                         <span class="at">max_treedepth =</span> <span class="dv">13</span>),</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>                          <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>fit_m <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_m,</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                         <span class="at">data =</span> u,</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                         <span class="at">chains =</span> <span class="dv">3</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                         <span class="at">cores =</span> <span class="dv">3</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                         <span class="at">iter =</span> <span class="dv">3500</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>                         <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>                         <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>, </span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>                                        <span class="at">max_treedepth =</span> <span class="dv">13</span>),</span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>                         <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fit_dm <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_dm,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> u,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">chains =</span> <span class="dv">3</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cores =</span> <span class="dv">3</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">max_treedepth =</span> <span class="dv">13</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_m <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_m,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> u,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains =</span> <span class="dv">3</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">cores =</span> <span class="dv">3</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">max_treedepth =</span> <span class="dv">13</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="posterior-predictive-checks-for-each-sample" class="section level2">
@@ -719,48 +719,48 @@ to new data.</p>
 </div>
 <div id="now-the-other-way-around-simulate-data-from-m-distribution" class="section level1">
 <h1>Now the other way around: simulate data from <span class="math inline">\(M\)</span> distribution</h1>
-<div class="sourceCode" id="cb26"><pre class="sourceCode stan"><code class="sourceCode stan"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; K; <span class="co">// categories (genes)</span></span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// samples</span></span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>  <span class="dt">vector</span>[K] gamma; <span class="co">// intercept</span></span>
-<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; gamma_sigma; </span>
-<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>  <span class="dt">vector</span>[K] delta; <span class="co">// effect</span></span>
-<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; delta_sigma;</span>
-<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>  <span class="dt">int</span> n; <span class="co">// total counts (tries)</span></span>
-<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>}</span>
-<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a></span>
-<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>  <span class="dt">int</span> y_a [N,K]; <span class="co">// sample after</span></span>
-<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>  <span class="dt">int</span> y_b [N,K]; <span class="co">// sample before</span></span>
-<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a>  <span class="dt">vector</span> [K] mu [<span class="dv">2</span>]; <span class="co">// intermediate alphas from dirichlet dist.</span></span>
-<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a>  <span class="dt">vector</span> [K] alpha [N]; </span>
-<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a>  <span class="dt">vector</span> [K] beta [N];</span>
-<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a>  </span>
-<span id="cb26-18"><a href="#cb26-18" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb26-19"><a href="#cb26-19" tabindex="-1"></a>   <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span>:K) {</span>
-<span id="cb26-20"><a href="#cb26-20" tabindex="-1"></a>     alpha[i][j] = normal_rng(gamma[j], gamma_sigma);</span>
-<span id="cb26-21"><a href="#cb26-21" tabindex="-1"></a>     beta[i][j] = normal_rng(delta[j], delta_sigma);</span>
-<span id="cb26-22"><a href="#cb26-22" tabindex="-1"></a>   } </span>
-<span id="cb26-23"><a href="#cb26-23" tabindex="-1"></a>   mu[<span class="dv">1</span>] = softmax(alpha[i] + beta[i]); <span class="co">// before treatment sim. from DM.</span></span>
-<span id="cb26-24"><a href="#cb26-24" tabindex="-1"></a>   mu[<span class="dv">2</span>] = softmax(alpha[i] - beta[i]); <span class="co">// after treatment sim. from DM.</span></span>
-<span id="cb26-25"><a href="#cb26-25" tabindex="-1"></a>   y_a[i,] = multinomial_rng(mu[<span class="dv">1</span>], n); <span class="co">// simulate from multinomial dist. -&gt; after sample</span></span>
-<span id="cb26-26"><a href="#cb26-26" tabindex="-1"></a>   y_b[i,] = multinomial_rng(mu[<span class="dv">2</span>], n); <span class="co">// simulate from multinomial dist. -&gt; before sample </span></span>
-<span id="cb26-27"><a href="#cb26-27" tabindex="-1"></a>  }</span>
-<span id="cb26-28"><a href="#cb26-28" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode stan"><code class="sourceCode stan"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; K; <span class="co">// categories (genes)</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// samples</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[K] gamma; <span class="co">// intercept</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; gamma_sigma; </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[K] delta; <span class="co">// effect</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; delta_sigma;</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> n; <span class="co">// total counts (tries)</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y_a [N,K]; <span class="co">// sample after</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y_b [N,K]; <span class="co">// sample before</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [K] mu [<span class="dv">2</span>]; <span class="co">// intermediate alphas from dirichlet dist.</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [K] alpha [N]; </span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span> [K] beta [N];</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span>:K) {</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>     alpha[i][j] = normal_rng(gamma[j], gamma_sigma);</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>     beta[i][j] = normal_rng(delta[j], delta_sigma);</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>   } </span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>   mu[<span class="dv">1</span>] = softmax(alpha[i] + beta[i]); <span class="co">// before treatment sim. from DM.</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>   mu[<span class="dv">2</span>] = softmax(alpha[i] - beta[i]); <span class="co">// after treatment sim. from DM.</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>   y_a[i,] = multinomial_rng(mu[<span class="dv">1</span>], n); <span class="co">// simulate from multinomial dist. -&gt; after sample</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>   y_b[i,] = multinomial_rng(mu[<span class="dv">2</span>], n); <span class="co">// simulate from multinomial dist. -&gt; before sample </span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>To simulate data we only need to provide the inputs (see ‘data’ block
 in the above STAN code):</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">12345</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>N_train <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>N_test <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>N <span class="ot">&lt;-</span> N_train <span class="sc">+</span> N_test</span>
-<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> K, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> K<span class="dv">-5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.05</span>), </span>
-<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>           <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.25</span>))</span>
-<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
-<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a>gamma_sigma <span class="ot">=</span> <span class="fl">0.001</span> <span class="co"># approx. complete pooling within gene -&gt; very little noise</span></span>
-<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a>delta_sigma <span class="ot">=</span> <span class="fl">0.001</span> <span class="co"># approx. complete pooling within gene</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">12345</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>N_train <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>N_test <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> N_train <span class="sc">+</span> N_test</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> K, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> K<span class="dv">-5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.05</span>), </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>           <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.25</span>))</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>gamma_sigma <span class="ot">=</span> <span class="fl">0.001</span> <span class="co"># approx. complete pooling within gene -&gt; very little noise</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>delta_sigma <span class="ot">=</span> <span class="fl">0.001</span> <span class="co"># approx. complete pooling within gene</span></span></code></pre></div>
 <p>… and simulate 20 samples with:</p>
 <p>We then extract the simulated observations: two matrices <span class="math inline">\(\vec{y}^{a}\)</span> and <span class="math inline">\(\vec{y}^{b}\)</span>, with rows as samples and
 columns as genes. We treat the first 10 samples (rows in each matrix) as
@@ -774,23 +774,23 @@ differences in mRNA counts between the two conditions for genes 12, 5,
 <div id="modeling-1" class="section level2">
 <h2>Modeling</h2>
 <p>Same models, <span class="math inline">\(DM\)</span> and <span class="math inline">\(M\)</span>, as before.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>fit_dm <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_dm,</span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>                          <span class="at">data =</span> u,</span>
-<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>                          <span class="at">chains =</span> <span class="dv">3</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>                          <span class="at">cores =</span> <span class="dv">3</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>                          <span class="at">iter =</span> <span class="dv">3500</span>,</span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>                          <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
-<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>, </span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>                                         <span class="at">max_treedepth =</span> <span class="dv">14</span>),</span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>                          <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>fit_m <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_m,</span>
-<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>                         <span class="at">data =</span> u,</span>
-<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>                         <span class="at">chains =</span> <span class="dv">3</span>,</span>
-<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>                         <span class="at">cores =</span> <span class="dv">3</span>,</span>
-<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>                         <span class="at">iter =</span> <span class="dv">3500</span>,</span>
-<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a>                         <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
-<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a>                         <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>, <span class="at">max_treedepth =</span> <span class="dv">14</span>),</span>
-<span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a>                         <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fit_dm <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_dm,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> u,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">chains =</span> <span class="dv">3</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cores =</span> <span class="dv">3</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>, </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">max_treedepth =</span> <span class="dv">14</span>),</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit_m <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">sampling</span>(<span class="at">object =</span> model_m,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> u,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains =</span> <span class="dv">3</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">cores =</span> <span class="dv">3</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">warmup =</span> <span class="dv">1500</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>, <span class="at">max_treedepth =</span> <span class="dv">14</span>),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">algorithm =</span> <span class="st">&quot;NUTS&quot;</span>)</span></code></pre></div>
 </div>
 <div id="posterior-predictive-checks-for-each-sample-1" class="section level2">
 <h2>Posterior predictive checks for each sample</h2>
