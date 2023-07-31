@@ -110,7 +110,7 @@ Notice the differences in mRNA counts between the two conditions for
 genes 12, 5, etc. Train data are shown as filled points and test data as
 hollow points.
 
-<img src="Tutorial_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+<img src="Readme_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
 ## Modeling
 
@@ -411,7 +411,7 @@ These predictions (means and 95% HDIs) will be compared against the
 observed data. Take a look at the predictions with narrow 95% HDIs by
 model $M$!
 
-<img src="Tutorial_files/figure-gfm/unnamed-chunk-23-1.png" style="display: block; margin: auto;" />
+<img src="Readme_files/figure-gfm/unnamed-chunk-23-1.png" style="display: block; margin: auto;" />
 
 Nearly all observations fall within the 95% HDIs of the counts predicted
 by either model.
@@ -459,7 +459,7 @@ outside the 95% HDIs of the predictions made by model $M$. Model $DM$
 does a better prediction overall using its condition-specific
 parameters.
 
-<img src="Tutorial_files/figure-gfm/unnamed-chunk-27-1.png" style="display: block; margin: auto;" />
+<img src="Readme_files/figure-gfm/unnamed-chunk-27-1.png" style="display: block; margin: auto;" />
 
 ### How many $D_{\text{train}}$ observations are outside the 95% HDIs of the predictions?
 
@@ -617,7 +617,7 @@ We can visualize the data using ggplot. Each point is the mRNA count
 differences in mRNA counts between the two conditions for genes 12, 5,
 7, etc. Filled points are train and hollow points are test data.
 
-<img src="Tutorial_files/figure-gfm/unnamed-chunk-45-1.png" style="display: block; margin: auto;" />
+<img src="Readme_files/figure-gfm/unnamed-chunk-45-1.png" style="display: block; margin: auto;" />
 
 ## Modeling
 
@@ -648,7 +648,7 @@ fit_m <- rstan::sampling(object = model_m,
 
 ## Posterior predictive checks for each sample
 
-<img src="Tutorial_files/figure-gfm/unnamed-chunk-53-1.png" style="display: block; margin: auto;" />
+<img src="Readme_files/figure-gfm/unnamed-chunk-53-1.png" style="display: block; margin: auto;" />
 
     ##          
     ##            DM   M
@@ -657,7 +657,7 @@ fit_m <- rstan::sampling(object = model_m,
 
 ## PPC from condition-specific parameters
 
-<img src="Tutorial_files/figure-gfm/unnamed-chunk-56-1.png" style="display: block; margin: auto;" />
+<img src="Readme_files/figure-gfm/unnamed-chunk-56-1.png" style="display: block; margin: auto;" />
 
 ### How many $D_{\text{train}}$ observations are outside the 95% HDIs of the predictions?
 
